@@ -32,7 +32,7 @@ export default class AzureADGraph {
       constructor
     */
     constructor(props) {
-      super(props);
+      this.props = props;
     }
 
     /*
