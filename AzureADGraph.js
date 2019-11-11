@@ -21,13 +21,6 @@ import { AuthSession } from 'expo'; // AuthSession: for opening the authorizatio
 
 /* class: AzureADGraph */
 export default class AzureADGraph {
-    /* define class state */
-    state = {
-      authResponse: null, // initial data/response from AuthSession
-      tokenResponse: null, // data/response from token endpoint
-      graphResponse: null, // data/response from Graph API /me endpoint
-    };
-
     /*
       constructor
     */
@@ -42,8 +35,7 @@ export default class AzureADGraph {
       returns:  this.state.graphResponse - the user data from the MS Graph API
     */
     getGraphData() {
-      this.openAuthSession();
-      return this.state.graphResponse;
+      return this.openAuthSession();
     }
 
     /*
@@ -55,10 +47,9 @@ export default class AzureADGraph {
     openAuthSession = async () => {
       let authResponse = AuthSession.startAsync({
         authUrl:
-          `https://login.microsoftonline.com/${encodeURIComponent(this.props.tenantId)}/oauth2/authorize?cliend_id=${encodeURIComponent(this.props.clientId)}&response_type=code&redirect_uri=${encodeURIComponent(this.props.redirectUrl)}`,
+          `https://login.microsoftonline.com/${encodeURIComponent(this.props.tenantId)}/oauth2/authorize?client_id=${encodeURIComponent(this.props.clientId)}&response_type=code&redirect_uri=${encodeURIComponent(this.props.redirectUrl)}`,
       });
-      this.setState({ authResponse });
-      this.getToken(authResponse.params.code);
+      return this.getToken(authResponse.params.code);
     }
 
     /*
@@ -100,8 +91,7 @@ export default class AzureADGraph {
       })
       .then((response) => response.json())
       .then((tokenResponse) => {
-        this.setState({ tokenResponse });
-        this.callMsGraph(tokenResponse.access_token);
+        return this.callMsGraph(tokenResponse.access_token);
       })
       .catch((error) => {
         console.error(error);
@@ -124,7 +114,7 @@ export default class AzureADGraph {
       })
       .then((response) => response.json())
       .then((graphResponse) => {
-        this.setState({ graphResponse })
+        return graphResponse;
       })
       .catch((error) => {
         console.error(error);
