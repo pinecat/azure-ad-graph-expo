@@ -9,6 +9,7 @@ This is a simple JavaScript library designed to be used with [Expo](https://expo
 import React from 'react';
 import { StyleSheet, View, Text, Button } from 'react-native'
 import { AuthSession } from 'expo';
+import { openAuthSession } from 'azure-ad-graph-expo';
 
 export default class App extends React.Component {
   state = {
