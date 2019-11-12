@@ -7,7 +7,7 @@ This is a simple JavaScript library designed to be used with [Expo](https://expo
 ### Example Code
 ```javascript
 import React from 'react';
-import { View, Text, Button } from 'react-native'
+import { StyleSheet, View, Text, Button } from 'react-native'
 import { AuthSession } from 'expo';
 
 export default class App extends React.Component {
