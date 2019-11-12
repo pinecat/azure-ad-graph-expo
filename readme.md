@@ -7,16 +7,45 @@ This is a simple JavaScript library designed to be used with [Expo](https://expo
 ### Example Code
 ```javascript
 import React from 'react';
-import { View, Text, Button, AuthSession } from 'expo';
+import { View, Text, Button } from 'react-native'
+import { AuthSession } from 'expo';
 
 export default class App extends React.Component {
+  state = {
+    result: null,
+  };
 
   render() {
     return (
-      <View>
-        
+      <View style={styles.container}>
+        <Button title="Login" onPress={this._handlePressAsync} />
+        {this.state.result ? (
+          <Text>{JSON.stringify(this.state.result)}</Text>
+        ) : <Text>Nothing to see here.</Text>}
       </View>
     );
   }
+
+  _handlePressAsync = async () => {
+    let result = await openAuthSession(azureAdAppProps);
+    this.setState({ result });
+  }
 }
+
+const azureAdAppProps = {
+  clientId: 'client_id',
+  tenantId: 'tenant_id',
+  scope: 'user.read',
+  redirectUrl: AuthSession.getRedirectUrl(),
+  clientSecret: 'client_secret',
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
 ```
