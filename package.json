@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "expo": "^37.0.12",
     "expo-auth-session": "^1.2.1"
   },
   "name": "azure-ad-graph-expo",
