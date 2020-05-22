@@ -99,7 +99,7 @@ const getToken = async (code, props) => {
     params:   props - a JSON object of your app properies (i.e. clientId, tenantId, etc)
     returns:  getToken() - calls getToken which calls callMsGraph to return the user data from the Graph API
 */
-export const openAuthSession = async (props) => {
+const openAuthSession = async (props) => {
   const authUrl = `https://login.microsoftonline.com/${props.tenantId}/oauth2/v2.0/authorize?client_id=${props.clientId}&response_type=code&scope=${encodeURIComponent(props.scope)}${props.domainHint ? "&domain_hint=" + encodeURIComponent(props.domainHint) : null}${props.prompt ? "&prompt=" + props.prompt : null}&redirect_uri=${encodeURIComponent(props.redirectUrl)}`;
 
   let authResponse = await AuthSession.startAsync({
@@ -109,3 +109,5 @@ export const openAuthSession = async (props) => {
 
   return await getToken(authResponse.params.code, props);
 }; //end openAuthSession()
+
+export { openAuthSession };
