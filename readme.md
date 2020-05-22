@@ -34,11 +34,13 @@ export default class App extends React.Component {
 }
 
 const azureAdAppProps = {
-  clientId: 'client_id',
-  tenantId: 'tenant_id',
-  scope: 'user.read',
-  redirectUrl: AuthSession.getRedirectUrl(),
-  clientSecret: 'client_secret',
+        clientId        :   AZURE_CLIENT_ID,
+        tenantId        :   AZURE_TENANT_ID,
+        scope           :   "user.read",
+        redirectUrl     :   AuthSession.makeRedirectUri(),
+        clientSecret    :   AZURE_CLIENT_SECRET,
+        domainHint      :   AZURE_DOMAIN_HINT,
+        prompt          :   "login"
 };
 
 const styles = StyleSheet.create({
