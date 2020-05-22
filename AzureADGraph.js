@@ -38,7 +38,7 @@ export async function openAuthSession(props) {
       authUrl,
   });
 
-  console.log("authResponse:\t" + JSON.stringify(authResponse));
+  console.log("authResponse (from AzureADgraph openAuthSession):\t" + JSON.stringify(authResponse));
   return await getToken(authResponse.params.code, props);
 }
 
