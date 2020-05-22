@@ -61,7 +61,6 @@ async function getToken(code, props) {
     code: code,
     redirect_uri: props.redirectUrl,
     grant_type: 'authorization_code',
-    // client_secret: props.clientSecret,
   }
 
   /* loop through object and encode each item as URI component before storing in array */
