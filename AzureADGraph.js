@@ -20,6 +20,31 @@
 import * as  AuthSession from 'expo-auth-session'; // AuthSession: for opening the authorization URL
 
 /*
+    callMsGraph
+      queries the Microsoft Graph API to return user data
+      params:   token - the unique token used to query the logged in user in the Graph API
+      returns:  graphResponse - a JSON object of the user data
+*/
+const callMsGraph = async (token) => {
+  /* make a GET request using fetch and querying with the token */
+  let graphResponse = null;
+  await fetch('https://graph.microsoft.com/v1.0/me', {
+    method: 'GET',
+    headers: {
+      'Authorization': 'Bearer ' + token,
+    }
+  })
+  .then((response) => response.json())
+  .then((response) => {
+    graphResponse = response;
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+  return graphResponse;
+}; //end callMsGraph()
+
+/*
   getToken
         sends POST request to MS Azure AD token endpoint to get a token that can be used to
         query the MS Graph API.  also forms the body to be send in the POST request
@@ -65,33 +90,8 @@ const getToken = async (code, props) => {
     .catch((error) => {
       console.error(error);
     });
-    return await this.callMsGraph(tokenResponse.access_token);
+    return await callMsGraph(tokenResponse.access_token);
 }; //end getToken()
-
-/*
-    callMsGraph
-      queries the Microsoft Graph API to return user data
-      params:   token - the unique token used to query the logged in user in the Graph API
-      returns:  graphResponse - a JSON object of the user data
-*/
-const callMsGraph = async (token) => {
-    /* make a GET request using fetch and querying with the token */
-    let graphResponse = null;
-    await fetch('https://graph.microsoft.com/v1.0/me', {
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer ' + token,
-      }
-    })
-    .then((response) => response.json())
-    .then((response) => {
-      graphResponse = response;
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-    return graphResponse;
-}; //end callMsGraph()
 
 /*
   openAuthSession
@@ -107,5 +107,5 @@ export const openAuthSession = async (props) => {
       authUrl,
   });
 
-  return await this.getToken(authResponse.params.code, props);
+  return await getToken(authResponse.params.code, props);
 }; //end openAuthSession()
