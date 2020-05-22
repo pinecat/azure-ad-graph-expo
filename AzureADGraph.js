@@ -17,7 +17,7 @@
 // +------------------------------------------------------------------------------------------+
 
 /* imports */
-import { AuthSession } from 'expo'; // AuthSession: for opening the authorization URL
+import * as  AuthSession from 'expo-auth-session'; // AuthSession: for opening the authorization URL
 
 /*
   openAuthSession
