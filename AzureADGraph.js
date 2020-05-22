@@ -26,9 +26,12 @@ import * as  AuthSession from 'expo-auth-session'; // AuthSession: for opening t
   returns:  getToken() - calls getToken which calls callMsGraph to return the user data from the Graph API
 */
 export async function openAuthSession(props) {
+  let authUrl = `https://login.microsoftonline.com/${props.tenantId}`;
+  //`https://login.microsoftonline.com/${props.tenantId}/oauth2/authorize?client_id=${props.clientId}&response_type=code&redirect_uri=${encodeURIComponent(props.redirectUrl)}`
+
   let authResponse = await AuthSession.startAsync({
     authUrl:
-      `https://login.microsoftonline.com/${props.tenantId}/oauth2/authorize?client_id=${props.clientId}&response_type=code&redirect_uri=${encodeURIComponent(props.redirectUrl)}`,
+      authUrl,
   });
   return await getToken(authResponse.params.code, props);
 }
