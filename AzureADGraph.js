@@ -11,7 +11,7 @@
 // | You must register an app in Azure AD before you can authenticate using this method.      |
 // | AzureADGraph is NOT a react component.                                                   |
 // |                                                                                          |
-// | https://docs.microsoft.com/en-us/azure/active-directory/develop/v1-protocols-oauth-code  |
+// | https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-auth-code-flow  |
 // | https://docs.microsoft.com/en-us/graph/use-the-api                                       |
 // |                                                                                          |
 // +------------------------------------------------------------------------------------------+
@@ -26,10 +26,12 @@ import * as  AuthSession from 'expo-auth-session'; // AuthSession: for opening t
   returns:  getToken() - calls getToken which calls callMsGraph to return the user data from the Graph API
 */
 export async function openAuthSession(props) {
-  let authUrl = `https://login.microsoftonline.com/${props.tenantId}/oauth2/authorize?client_id=${props.clientId}&response_type=code&redirect_uri=${encodeURIComponent(props.redirectUrl)}${props.domainHint ? "&domain_hint=" + props.domainHint : null}`;
-  // `https://login.microsoftonline.com/${props.tenantId}`;
-  //${props.domainHint ? "&domain_hint=" + props.domainHint : null}
-  //`https://login.microsoftonline.com/${props.tenantId}/oauth2/authorize?client_id=${props.clientId}&response_type=code&redirect_uri=${encodeURIComponent(props.redirectUrl)}`
+  /*  
+      Includes optional domain_hint (to automatically skip the Azure AD account
+      selection and go to your desired SSO page) and prompt URL parameters. 
+      Parameters are only included if they are defined in the props argument.
+  */ 
+  const authUrl = `https://login.microsoftonline.com/${props.tenantId}/oauth2/v2.0/authorize?client_id=${props.clientId}&response_type=code&scope=${encodeURIComponent(props.scope)}${props.domainHint ? "&domain_hint=" + encodeURIComponent(props.domainHint) : null}${props.prompt ? "&prompt=" + props.prompt : null}&redirect_uri=${encodeURIComponent(props.redirectUrl)}`;
 
   let authResponse = await AuthSession.startAsync({
     authUrl:
@@ -50,13 +52,16 @@ export async function openAuthSession(props) {
 */
 async function getToken(code, props) {
   /* parse/gather correct key values for the POST request to the token endpoint */
+  /* Client secret can be omitted. Including it yields and error 
+    which disrupts the MS Graph information retrieval. 
+  */
   var requestParams = {
     client_id: props.clientId,
     scope: props.scope,
     code: code,
     redirect_uri: props.redirectUrl,
     grant_type: 'authorization_code',
-    client_secret: props.clientSecret,
+    // client_secret: props.clientSecret,
   }
 
   /* loop through object and encode each item as URI component before storing in array */
