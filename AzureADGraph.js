@@ -31,7 +31,7 @@ export async function openAuthSession(props) {
       selection and go to your desired SSO page) and prompt URL parameters. 
       Parameters are only included if they are defined in the props argument.
   */ 
-  const authUrl = `https://login.microsoftonline.com/${props.tenantId}/oauth2/v2.0/authorize?client_id=${props.clientId}&response_type=code&scope=${encodeURIComponent(props.scope)}${props.domainHint ? "&domain_hint=" + encodeURIComponent(props.domainHint) : null}${props.prompt ? "&prompt=" + props.prompt : null}&redirect_uri=${encodeURIComponent(props.redirectUrl)}`;
+ const authUrl = `https://login.microsoftonline.com/${props.tenantId}/oauth2/v2.0/authorize?client_id=${props.clientId}&response_type=code&scope=${encodeURIComponent(props.scope)}${props.domainHint ? "&domain_hint=" + encodeURIComponent(props.domainHint) : null}${props.prompt ? "&prompt=" + props.prompt : null}&redirect_uri=${encodeURIComponent(props.redirectUrl)}`;
 
   let authResponse = await AuthSession.startAsync({
     authUrl:
@@ -52,7 +52,7 @@ export async function openAuthSession(props) {
 */
 async function getToken(code, props) {
   /* parse/gather correct key values for the POST request to the token endpoint */
-  /* Client secret can be omitted. Including it yields and error 
+  /* Client secre (client_secret variable) t can be omitted. Including it yields and error 
     which disrupts the MS Graph information retrieval. 
   */
   var requestParams = {
