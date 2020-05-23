@@ -1,1 +1,4 @@
 node_modules
+
+#Ignore this automatically generated NPM file
+package-lock.json
