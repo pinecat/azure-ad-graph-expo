@@ -4,6 +4,10 @@
 // | ---------------                                                                          |
 // | Created by pinecat (https://github.com/pinecat/azure-ad-graph-expo)                      |
 // |                                                                                          |
+// | CONTRIBUTORS:                                                                            |
+// |  pinecat (https://github.com/pinecat)                                                    |
+// |  JuanDavidLopez95 (https://github.com/JuanDavidLopez95)                                  |
+// |                                                                                          |
 // | JavaScript library designed for use with Expo (https://expo.io).                         |
 // | This library follows Microsoft's Azure AD authentication flow using                      |
 // | Expo's own AuthSession to return user data from the Microsoft Graph                      |
@@ -11,13 +15,13 @@
 // | You must register an app in Azure AD before you can authenticate using this method.      |
 // | AzureADGraph is NOT a react component.                                                   |
 // |                                                                                          |
-// | https://docs.microsoft.com/en-us/azure/active-directory/develop/v1-protocols-oauth-code  |
+// | https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-overview              |
 // | https://docs.microsoft.com/en-us/graph/use-the-api                                       |
 // |                                                                                          |
 // +------------------------------------------------------------------------------------------+
 
 /* imports */
-import * as  AuthSession from 'expo-auth-session'; // AuthSession: for opening the authorization URL
+import * as AuthSession from 'expo-auth-session'; // AuthSession: for opening the authorization URL
 
 /*
     callMsGraph
