@@ -106,12 +106,30 @@ const getToken = async (code, props) => {
 const openAuthSession = async (props) => {
   const authUrl = `https://login.microsoftonline.com/${props.tenantId}/oauth2/v2.0/authorize?client_id=${props.clientId}&response_type=code&scope=${encodeURIComponent(props.scope)}${props.domainHint ? "&domain_hint=" + encodeURIComponent(props.domainHint) : null}${props.prompt ? "&prompt=" + props.prompt : null}&redirect_uri=${encodeURIComponent(props.redirectUrl)}`;
 
-  let authResponse = await AuthSession.startAsync({
-    authUrl:
-      authUrl,
+  /*
+    Add a returnUrl parameter to the AuthSession.startAsync() config object. 
+    Strange bug on Android --
+    Without this, even if authentication is successful, the result of authResponse will always 
+    be { type: 'dismiss' }
+
+    Source :
+        https://docs.expo.io/versions/latest/sdk/auth-session/#authsessionstartasyncoptions
+  */ 
+  
+ let authResponse = await AuthSession.startAsync({
+    authUrl     :   authUrl,
+    returnUrl   :   props.redirectUrl || AuthSession.makeRedirectUri()
   });
 
-  return await getToken(authResponse.params.code, props);
+  /* 
+    If there is an error, return the error code. 
+    Else, proceed with grabbing a token for authentication.
+  */
+  if (authResponse.type && authResponse.type === 'error' ) {
+      return { error    : authResponse.errorCode };
+  } else {
+    return await getToken(authResponse.params.code, props);
+  }
 }; //end openAuthSession()
 
 export { openAuthSession };
