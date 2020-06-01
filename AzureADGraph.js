@@ -116,20 +116,36 @@ const openAuthSession = async (props) => {
         https://docs.expo.io/versions/latest/sdk/auth-session/#authsessionstartasyncoptions
   */ 
   
- let authResponse = await AuthSession.startAsync({
-    authUrl     :   authUrl,
-    returnUrl   :   props.redirectUrl || AuthSession.makeRedirectUri()
-  });
+  let authResponse = await AuthSession.startAsync({
+      authUrl     :   authUrl,
+      returnUrl   :   props.redirectUrl || AuthSession.makeRedirectUri()
+    });
 
   /* 
     If there is an error, return the error code. 
     Else, proceed with grabbing a token for authentication.
   */
-  if (authResponse.type && authResponse.type === 'error') {
-      return { "error"    : authResponse.errorCode };
-  } else {
+  if (authResponse.type || authResponse == undefined) {
+    console.log("hiiiii")
+    return { "error"    : authResponse.errorCode  || "Canceled operation."};
+  } 
+
+  /*
+  Only continue with the authentication process if user does not cancel or close 
+  the ongoing authentication window or session. authResponse and the code from 
+  the parameters will be defined if the authorization session continues. 
+  */
+  if ( authResponse && authResponse.params.code != undefined) {
+    console.log("authResponse.params.code");
     return await getToken(authResponse.params.code, props);
-  }
+  } 
+
+  //Fallback else statement for any other errors.
+  else {
+    return { 
+      "error": "Unknown error."
+    };
+  }  
 }; //end openAuthSession()
 
 export { openAuthSession };
