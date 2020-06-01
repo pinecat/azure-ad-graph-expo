@@ -125,8 +125,8 @@ const openAuthSession = async (props) => {
     If there is an error, return the error code. 
     Else, proceed with grabbing a token for authentication.
   */
-  if (authResponse.type && authResponse.type === 'error' ) {
-      return { error    : authResponse.errorCode };
+  if (authResponse.type && authResponse.type === 'error') {
+      return { "error"    : authResponse.errorCode };
   } else {
     return await getToken(authResponse.params.code, props);
   }
