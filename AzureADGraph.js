@@ -43,7 +43,7 @@ const callMsGraph = async (token) => {
     graphResponse = response;
   })
   .catch((error) => {
-    console.error(error);
+    graphResponse = error;
   });
   return graphResponse;
 }; //end callMsGraph()
@@ -126,7 +126,6 @@ const openAuthSession = async (props) => {
     Else, proceed with grabbing a token for authentication.
   */
   if (authResponse.type || authResponse == undefined) {
-    console.log("hiiiii")
     return { "error"    : authResponse.errorCode  || "Canceled operation."};
   } 
 
@@ -136,7 +135,6 @@ const openAuthSession = async (props) => {
   the parameters will be defined if the authorization session continues. 
   */
   if ( authResponse && authResponse.params.code != undefined) {
-    console.log("authResponse.params.code");
     return await getToken(authResponse.params.code, props);
   } 
 
