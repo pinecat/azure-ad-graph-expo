@@ -45,7 +45,17 @@ const callMsGraph = async (token) => {
   .catch((error) => {
     graphResponse = error;
   });
-  return graphResponse;
+  
+  /* 
+    Spread the results of the graph and add a type property with a value of success to indicate
+    that the AzureAD info grabbing was a success
+  */ 
+  const finalResponse = {
+    ...graphResponse,
+    type: "success"
+  }
+
+  return finalResponse;
 }; //end callMsGraph()
 
 /*
@@ -107,7 +117,8 @@ const openAuthSession = async (props) => {
   const authUrl = `https://login.microsoftonline.com/${props.tenantId}/oauth2/v2.0/authorize?client_id=${props.clientId}&response_type=code&scope=${encodeURIComponent(props.scope)}${props.domainHint ? "&domain_hint=" + encodeURIComponent(props.domainHint) : null}${props.prompt ? "&prompt=" + props.prompt : null}&redirect_uri=${encodeURIComponent(props.redirectUrl)}`;
 
   /*
-    Add a returnUrl parameter to the AuthSession.startAsync() config object. 
+    Add a returnUrl parameter to the AuthSession.startAsync() config object.
+    If undefined, fall back to AuthSession.makeRedirectUri().
     Strange bug on Android --
     Without this, even if authentication is successful, the result of authResponse will always 
     be { type: 'dismiss' }
@@ -118,32 +129,54 @@ const openAuthSession = async (props) => {
   
   let authResponse = await AuthSession.startAsync({
       authUrl     :   authUrl,
-      returnUrl   :   props.redirectUrl || AuthSession.makeRedirectUri()
+      returnUrl   :   props.returnUrl || AuthSession.makeRedirectUri()
+    })
+    .then((authResponse ) => { 
+          //Conditional if the user proceeds with the authentication process
+          if (authResponse.type === "success") { 
+
+          /*
+            Only continue with the authentication process if user does not cancel or close 
+            the ongoing authentication window or session. authResponse and the code from 
+            the parameters will be defined if the authorization session continues. 
+          */
+          
+            //Do not proceed with acquiring a token if there is an error. Return the error and the response.
+            if (authResponse.params["error"] ) {
+
+              /* 
+                Return error as an added error property value in the object for easier 
+                catching of the error in the front end 
+              */
+              return { 
+                      "error": authResponse.params.error,
+                      ...authResponse
+                    };
+            } else {
+              //If authentication is successful, pass the authorization code to get the token
+              return getToken(authResponse.params.code, props);
+            }
+
+          } //end if-statement
+          //Else statement to catch if the user has decline continuing further with authentication.
+          else { 
+            //Return the authResponse which wil include a type of dismissed or cancelled. 
+            return { 
+              "error": "Authorization session cancelled",
+              ...authResponse
+            };
+          } //end else-statement.
+    })
+    .catch((error) => {
+      console.error(error);
+      return { 
+          "error" : error , 
+          "type": "error"
+        };
     });
 
-  /* 
-    If there is an error, return the error code. 
-    Else, proceed with grabbing a token for authentication.
-  */
-  if (authResponse.type || authResponse == undefined) {
-    return { "error"    : authResponse.errorCode  || "Canceled operation."};
-  } 
-
-  /*
-  Only continue with the authentication process if user does not cancel or close 
-  the ongoing authentication window or session. authResponse and the code from 
-  the parameters will be defined if the authorization session continues. 
-  */
-  if ( authResponse && authResponse.params.code != undefined) {
-    return await getToken(authResponse.params.code, props);
-  } 
-
-  //Fallback else statement for any other errors.
-  else {
-    return { 
-      "error": "Unknown error."
-    };
-  }  
+    //Return the final authResponse that resolves from the promise.
+    return authResponse;
 }; //end openAuthSession()
 
 export { openAuthSession };
