@@ -4,7 +4,7 @@
     "expo-auth-session": "^1.2.1"
   },
   "name": "azure-ad-graph-expo",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "Small library designed for use with Expo, for getting user data from the Microsoft Graph API, using Azure AD for authentication, and following the Microsoft Azure AD auth flow.  AzureADGraph is not a react component.",
   "main": "AzureADGraph.js",
   "devDependencies": {},
