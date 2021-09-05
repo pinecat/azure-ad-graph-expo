@@ -4,8 +4,8 @@
 ### About
 This is a simple JavaScript library designed to be used with [Expo](https://expo.io).  This utilizes Expo's AuthSession to authenticate via Microsoft Azure AD.  It follows Microsoft's Azure authentication flow to first login the user, then acquire a token, and then use that token to query the Microsoft Graph API /me endpoint to get user data.
 
-### Azure Endpoints & Expo
-This library now uses the Azure v2 endpoints!  If you must use the v1 endpoints, please use version 1.1.2.  Also, version 1 of this library was originally intended for use with Expo v35.  This version works with Expo v37, the latest version of Expo to date.
+### Azure Endpoints
+This library now uses the Azure v2 endpoints!  If you must use the v1 endpoints, please use version 1.1.2.
 
 ### Installing
 You can install this library via `npm` or `yarn` like so:
@@ -50,6 +50,7 @@ const azureAdAppProps = {
         tenantId        :   AZURE_TENANT_ID,
         scope           :   'user.read',
         redirectUrl     :   AuthSession.makeRedirectUri(),
+        returnUrl       :   null, // If left as 'null', redirectUrl will be used instead
         clientSecret    :   AZURE_CLIENT_SECRET,
         domainHint      :   AZURE_DOMAIN_HINT,
         prompt          :   'login'
