@@ -10,10 +10,10 @@ This library now uses the Azure v2 endpoints!  If you must use the v1 endpoints,
 ### Installing
 You can install this library via `npm` or `yarn` like so:
 ```sh
-$ npm install azure-ad-graph-expo
+npm install azure-ad-graph-expo
 ```
 ```sh
-$ yarn add azure-ad-graph-expo
+yarn add azure-ad-graph-expo
 ```
 
 ### Example Code
